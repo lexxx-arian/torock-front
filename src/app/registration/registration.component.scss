@@ -1,0 +1,14 @@
+form.was-validated .form-control:invalid,
+form.was-validated .custom-select:invalid {
+  border-color: var(--red) !important;
+}
+
+.required-label {
+  position: relative;
+  &::after {
+    content: "*";
+    position: absolute;
+    color: var(--red);
+  }
+}
+

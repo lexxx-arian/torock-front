@@ -1,0 +1,63 @@
+<section class="container" *ngIf="registrationForm">
+<h1>{{eventTitle}}</h1>
+<p>Регистрация для участия в гонке</p>
+<form [formGroup]="registrationForm" class="needs-validation d-flex flex-column" [ngClass]="{'was-validated': isFormInvalid}" (submit)="submit()" novalidate>
+  <div class="mb-3 row justify-content-center align-items-baseline" *ngFor=" let field of formFieldList" [ngSwitch]="field.fieldType">
+    <ng-container *ngSwitchCase="fieldType.INPUT">
+      <label [for]="field.fieldName" class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
+      <div class="col-sm-8">
+        <input
+          class="form-control border border-3"
+          [attr.type]="field.textType"
+          [id]="field.fieldName"
+          [formControlName]="field.fieldName"
+          [required]="field.required"
+          [attr.placeholder]="field.placeholder || field.label"
+          [min]="field.min"
+          [max]="field.max">
+        <div class="invalid-feedback">
+          <ng-container *ngIf="isRequiredError(field.fieldName); else customError">
+            Поле обязательно для заполнения
+          </ng-container>
+          <ng-template #customError>
+            Необходимо ввести корректное значение в поле
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="fieldType.CHECKBOX">
+      <label class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
+      <div class="col-sm-8">
+        <div class="custom-control custom-checkbox">
+          <input class="custom-control-input" type="checkbox" [formControlName]="field.fieldName" [id]="field.fieldName" [required]="field.required">
+          <label class="custom-control-label" [for]="field.fieldName">
+            {{field.label}}
+          </label>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="fieldType.RADIO">
+      <label class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
+      <div class="col-sm-8 d-flex">
+        <div class="custom-control custom-radio" [ngClass]="{'ml-2': i>0}" *ngFor="let checkboxControl of field.valueList; index as i">
+          <input class="custom-control-input" type="radio" [name]="field.fieldName" [value]="checkboxControl" [formControlName]="field.fieldName" [id]="checkboxControl" [required]="field.required">
+          <label class="custom-control-label" [for]="checkboxControl">
+            {{checkboxControl}}
+          </label>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="fieldType.SELECT">
+      <label class="col-form-label col-sm-4 text-sm-right" [for]="field.fieldName" [class.required-label]="field.required">{{field.label}}</label>
+      <div class="col-sm-8">
+        <select class="custom-select border border-3" [id]="field.fieldName" [formControlName]="field.fieldName" [required]="field.required">
+          <option *ngFor="let value of field.valueList" [value]="value">{{value}}</option>
+        </select>
+      </div>
+    </ng-container>
+  </div>
+  <button type="submit" class="btn btn-primary align-self-end mt-3">
+    Зарегистрироваться
+  </button>
+</form>
+</section>

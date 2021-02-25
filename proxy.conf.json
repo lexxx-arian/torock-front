@@ -1,0 +1,14 @@
+{
+  "/reg-data.php": {
+    "target": "http://dev.torock.pro/reg-data.php",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/reg.php": {
+    "target": "http://dev.torock.pro/reg.php",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
