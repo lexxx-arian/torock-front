@@ -12,3 +12,21 @@ form.was-validated .custom-select:invalid {
   }
 }
 
+@media (max-width: 576px) {
+  .date-icon {
+    display: none;
+  }
+}
+
+.date-icon {
+  position: absolute;
+  top: 5px;
+  right: 30px;
+  background-color: #fff;
+}
+
+.was-validated {
+  .form-control:invalid ~ .date-icon {
+    right: calc(10px + 1.5em + 0.75rem);
+  }
+}

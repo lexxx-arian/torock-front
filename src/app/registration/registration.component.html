@@ -5,16 +5,17 @@
   <div class="mb-3 row justify-content-center align-items-baseline" *ngFor=" let field of formFieldList" [ngSwitch]="field.fieldType">
     <ng-container *ngSwitchCase="fieldType.INPUT">
       <label [for]="field.fieldName" class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
-      <div class="col-sm-8">
+      <div class="col-sm-8" style="position: relative;">
         <input
           class="form-control border border-3"
-          [attr.type]="field.textType"
+          [type]="field.textType"
           [id]="field.fieldName"
           [formControlName]="field.fieldName"
           [required]="field.required"
           [attr.placeholder]="field.placeholder || field.label"
           [min]="field.min"
           [max]="field.max">
+        <i *ngIf="field.textType === 'date'" class="material-icons date-icon">date_range</i>
         <div class="invalid-feedback">
           <ng-container *ngIf="isRequiredError(field.fieldName); else customError">
             Поле обязательно для заполнения
@@ -40,7 +41,13 @@
       <label class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
       <div class="col-sm-8 d-flex">
         <div class="custom-control custom-radio" [ngClass]="{'ml-2': i>0}" *ngFor="let checkboxControl of field.valueList; index as i">
-          <input class="custom-control-input" type="radio" [name]="field.fieldName" [value]="checkboxControl" [formControlName]="field.fieldName" [id]="checkboxControl" [required]="field.required">
+          <input class="custom-control-input"
+            type="radio"
+            [attr.name]="field.fieldName"
+            [value]="checkboxControl"
+            [formControlName]="field.fieldName"
+            [id]="checkboxControl"
+            [required]="field.required">
           <label class="custom-control-label" [for]="checkboxControl">
             {{checkboxControl}}
           </label>

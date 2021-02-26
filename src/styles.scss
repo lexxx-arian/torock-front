@@ -6,3 +6,8 @@
 .border-3 {
   border-width: 3px !important;
 }
+
+.custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+  background-size: cover;
+}
+

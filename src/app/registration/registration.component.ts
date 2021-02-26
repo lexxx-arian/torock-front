@@ -7,6 +7,7 @@ import { FormFieldModel } from '../model/form-field.model';
 import { FieldType } from '../model/form-field.interface';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalSuccessRegistrationComponent } from './modal.component';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
@@ -76,7 +77,15 @@ export class RegistrationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.activatedRoute.queryParams.pipe(switchMap(queryParamMap => this.registrationService.getRegistrationForm(queryParamMap['event'])))
+    this.activatedRoute.queryParams.pipe(switchMap(queryParamMap => {
+      if (!queryParamMap['event']) {
+        return of({
+          event_name: 'Регистрация в системе',
+          form_fields: []
+        });
+      }
+      return this.registrationService.getRegistrationForm(queryParamMap['event']);
+    }))
       .subscribe((res: any) => {
         this.eventTitle = res.event_name;
         this.formFieldList = [...this.staticFormData, ...res.form_fields].map((field: any) => new FormFieldModel({
