@@ -1,0 +1,65 @@
+.card{
+  position: relative;
+
+  .backdrop {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0;
+  }
+
+  .button-container {
+    display: none;
+  }
+
+  &:hover {
+    .card-body {
+      opacity: 0.5;
+    }
+
+    .button-container {
+      display: flex;
+      opacity: 1;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      cursor: pointer;
+      background: transparent;
+
+      .btn[disabled] {
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+    }
+
+    .backdrop {
+      transition: opacity 0.5s ease;
+      visibility: visible;
+      z-index: 10;
+      opacity: 0.7;
+    }
+  }
+}
+
+.backgroud-card {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-blend-mode: soft-light;
+  background-color: lightgrey;
+}
+
+.mountaineering {
+  background-image: url('/assets/alp.jfif');
+}
+
+.skyrunning {
+  background-image: url('/assets/skyrunning.jfif');
+}
+
+.default {
+  background-image: url('/assets/main-logo.png');
+}
+

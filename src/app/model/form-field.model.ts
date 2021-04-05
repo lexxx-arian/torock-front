@@ -7,7 +7,8 @@ export class FormFieldModel {
   required: boolean;
   fieldType: FieldType;
   label: string;
-  valueList?: string[];
+  fieldNote: string;
+  valueList?: {name: string, value: string | number}[];
   textType?: string;
   placeholder?: string;
   min?: string | number;
@@ -19,17 +20,29 @@ export class FormFieldModel {
     required: boolean;
     fieldType: FieldType;
     label: string;
+    fieldNote: string;
     valueList?: string;
   }) {
     this.fieldId = options.fieldId;
     this.fieldName = options.fieldName;
     this.required = options.required;
-    this.fieldType = options.fieldType === FieldType.DATE ? FieldType.INPUT : options.fieldType;
+    this.fieldType = [FieldType.DATE, FieldType.NUM].includes(options.fieldType) ? FieldType.INPUT : options.fieldType;
     this.label = options.label;
-    this.valueList = options?.valueList?.split(';') || [];
-    this.textType = options.fieldType === FieldType.DATE ? 'date' : (/.+mail/.test(options.fieldName) ? 'email' : 'text');
+    this.fieldNote = options.fieldNote;
+    this.valueList = Array.isArray(options?.valueList) ? options?.valueList : (options?.valueList?.split(';').map(item => ({name: item, value: item})) || [{name: 'нет значений', value: 0}]);
+    switch (options.fieldType) {
+      case FieldType.DATE:
+        this.textType = 'date';
+        break;
+      case FieldType.NUM:
+        this.textType = 'number';
+        break;
+      default:
+        this.textType = /.+mail/.test(options.fieldName) ? 'email' : 'text';
+        break;
+    }
     this.placeholder = this.textType === 'email' ? 'name@example.com' : '';
-    this.max = this.textType === 'date' ? new Date().toJSON().slice(0, 10) : '';
+    this.max = this.textType === 'date' && this.fieldName === 'bdate' ? new Date().toJSON().slice(0, 10) : '';
     this.min = this.textType === 'date' ? '1899-01-01' : '';
   }
 

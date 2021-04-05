@@ -1,13 +1,206 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'variables';
 @import '../node_modules/bootstrap/scss/bootstrap';
-
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 .border-3 {
   border-width: 3px !important;
 }
 
-.custom-radio .custom-control-input:checked ~ .custom-control-label::after {
-  background-size: cover;
+form.was-validated {
+  .ng-select.custom.ng-invalid {
+    .ng-select-container {
+      border-color: var(--danger) !important;
+    }
+  }
 }
 
+.ng-select.custom {
+  &.ng-select-focused:not(.ng-select-opened) {
+    .ng-select-container {
+      @if $enable-shadows {
+        @include box-shadow($custom-select-box-shadow, $input-focus-box-shadow);
+      } @else {
+        // Avoid using mixin so we can pass custom focus shadow properly
+        box-shadow: $custom-select-focus-box-shadow;
+      }
+    }
+  }
+
+  &.ng-select-opened {
+    .ng-select-container {
+      .ng-arrow {
+        border-width: 0 7px 7px !important;
+        border-top-color: transparent !important;
+        border-bottom-color: $white !important;
+        // top: 50%;
+        transform: translateY(calc(-50% - 9px)) !important;
+      }
+    }
+  }
+
+  .ng-select-container {
+    width: 100%;
+    height: 30px !important; // $custom-select-height;
+    padding: 0; //$custom-select-padding-y $custom-select-padding-x $custom-select-padding-y $custom-select-padding-x;
+    font-family: $custom-select-font-family;
+    @include font-size($custom-select-font-size);
+    font-weight: $custom-select-font-weight;
+    line-height: $custom-select-line-height;
+    color: $custom-select-color;
+    vertical-align: middle;
+    border: $custom-select-border-width solid $custom-select-border-color !important;
+    @include border-radius($custom-select-border-radius, 0);
+    @include box-shadow($custom-select-box-shadow);
+    appearance: none;
+
+    &:focus {
+      border-color: $custom-select-focus-border-color;
+      outline: 0;
+      @if $enable-shadows {
+        @include box-shadow($custom-select-box-shadow, $input-focus-box-shadow);
+      } @else {
+        // Avoid using mixin so we can pass custom focus shadow properly
+        box-shadow: $custom-select-focus-box-shadow;
+      }
+
+      &::-ms-value {
+        // For visual consistency with other platforms/browsers,
+        // suppress the default white text on blue background highlight given to
+        // the selected option text when the (still closed) <select> receives focus
+        // in IE and (under certain conditions) Edge.
+        // See https://github.com/twbs/bootstrap/issues/19398.
+        color: $input-color;
+        background-color: $input-bg;
+      }
+    }
+
+    &[multiple],
+    &[size]:not([size="1"]) {
+      height: auto;
+      padding-right: $custom-select-padding-x;
+      background-image: none;
+    }
+
+    &:disabled {
+      color: $custom-select-disabled-color;
+      background-color: $custom-select-disabled-bg;
+    }
+
+    // Hides the default caret in IE11
+    &::-ms-expand {
+      display: none;
+    }
+
+    // Remove outline from select box in FF
+    &:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 $custom-select-color;
+    }
+
+    .ng-arrow-wrapper {
+      padding-right: 0;
+      width: 28px;
+      height: 34px;
+      position: absolute;
+      right: -2px;
+      background-color: $custom-select-border-color;
+
+      .ng-arrow {
+        border-top-color: #fff;
+        border-width: 7px 7px 3.5px;
+        top: 50%;
+        left: 1px;
+        transform: translateY(calc(-50% - 1.5px));
+      }
+    }
+  }
+}
+
+.ng-dropdown-panel-items {
+  .ng-option.ng-option-marked {
+    background-color: #010232 !important;
+    color: $white !important;
+  }
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked .ng-option-label {
+  font-weight: inherit !important;
+}
+
+$font-family-base: "Montserrat", $font-family-sans-serif !default;
+
+html {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #49535A;
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+  .row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+form {
+  margin-top: 69px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 30px;
+  }
+
+  .form-control {
+    max-height: 36px;
+  }
+
+  .col-form-label {
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  .form-control-row {
+    margin-bottom: 19px;
+  }
+
+  .control-description {
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .custom-checkbox,
+  .custom-radio {
+    height: 26px;
+
+    .custom-control-label {
+      &::before,
+      &::after {
+        border-radius: 0;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .custom-control-input:checked ~ .custom-control-label {
+      &::before {
+        background-color: var(--primary) !important;
+      }
+
+      &::after {
+        background-image: none;
+        width: 16px;
+        height: 16px;
+        border: solid 2px white;
+        transform: translate(2px, 2px);
+      }
+    }
+
+    span {
+      margin-left: 10px;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+<section class="container">
+  <h1>Календарь соревнований</h1>
+  <ng-container *ngIf="eventList$ | async as eventList">
+    <div class="d-flex flex-wrap justify-content-around">
+      <div class="card border-primary mb-5" style="width: 30rem;" *ngFor="let event of eventList">
+        <div class="card-header">{{event.disciplines}}</div>
+        <div class="card-body text-primary backgroud-card" [ngClass]="getBackgroundClass(event.disciplines)" style="min-height: 20rem;">
+          <h5 class="card-title">{{event.event_name}}</h5>
+          <p class="card-text">Место проведения: {{event.location}}</p>
+        </div>
+        <div class="button-container flex-column align-items-center justify-content-around">
+          <a class="btn btn-outline-info w-50 border-3" [routerLink]="['/registration']" [queryParams]="{event: event.id}">Зарегистрироваться</a>
+          <a class="btn btn-outline-info w-50 border-3" disabled>Результаты</a>
+        </div>
+        <div class="backdrop"></div>
+      </div>
+    </div>
+  </ng-container>
+</section>

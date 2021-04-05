@@ -1,70 +1,145 @@
-<section class="container" *ngIf="registrationForm">
-<h1>{{eventTitle}}</h1>
-<p>Регистрация для участия в гонке</p>
-<form [formGroup]="registrationForm" class="needs-validation d-flex flex-column" [ngClass]="{'was-validated': isFormInvalid}" (submit)="submit()" novalidate>
-  <div class="mb-3 row justify-content-center align-items-baseline" *ngFor=" let field of formFieldList" [ngSwitch]="field.fieldType">
-    <ng-container *ngSwitchCase="fieldType.INPUT">
-      <label [for]="field.fieldName" class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
-      <div class="col-sm-8" style="position: relative;">
-        <input
-          class="form-control border border-3"
-          [type]="field.textType"
-          [id]="field.fieldName"
-          [formControlName]="field.fieldName"
-          [required]="field.required"
-          [attr.placeholder]="field.placeholder || field.label"
-          [min]="field.min"
-          [max]="field.max">
-        <i *ngIf="field.textType === 'date'" class="material-icons date-icon">date_range</i>
-        <div class="invalid-feedback">
-          <ng-container *ngIf="isRequiredError(field.fieldName); else customError">
-            Поле обязательно для заполнения
-          </ng-container>
-          <ng-template #customError>
-            Необходимо ввести корректное значение в поле
-          </ng-template>
+<section class="container-fluid registration-page" *ngIf="isLoaded;else loading">
+  <ng-container *ngIf="registrationForm; else registrationIsFinished">
+    <h1 class="registration-page__header">{{eventTitle}}</h1>
+    <p class="registration-page__description">Регистрационная анкета участника гонки</p>
+    <form [formGroup]="registrationForm" class="needs-validation d-flex flex-column" [ngClass]="{'was-validated': isFormInvalid}" (submit)="submit()" novalidate>
+      <div class="form-control-row row justify-content-center align-items-end" *ngFor=" let field of formFieldList" [ngSwitch]="field.fieldType">
+        <ng-container *ngSwitchCase="fieldType.INPUT">
+          <label [for]="field.fieldName" class="col-form-label col-md-2 text-md-right" [class.required-label]="field.required">{{field.label}}</label>
+          <div class="col-md-5" style="position: relative;">
+            <input
+              class="form-control border border-3"
+              [type]="field.textType"
+              [id]="field.fieldName"
+              [formControlName]="field.fieldName"
+              [required]="field.required"
+              [attr.placeholder]="field.placeholder || field.label"
+              [min]="field.min"
+              [max]="field.max">
+            <div class="invalid-feedback">
+              <ng-container *ngIf="isRequiredError(field.fieldName); else customError">
+                Поле обязательно для заполнения
+              </ng-container>
+              <ng-template #customError>
+                Необходимо ввести корректное значение в поле
+              </ng-template>
+            </div>
+          </div>
+          <div class="col-md-5 control-description">{{field.fieldNote}}</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="fieldType.FILE">
+          <label class="col-md-2 text-md-right">{{field.label}}</label>
+          <div class="col-md-5">
+            <div class="custom-file col-form-label">
+              <label class="custom-file-label" [for]="field.fieldName" [class.required-label]="field.required" style="white-space: nowrap;">{{getFileName(field.fieldName) || field.label}}</label>
+              <input
+                type="file"
+                class="form-control border border-3 custom-file-input"
+                [ngClass]="{'is-invalid': isFileLarge(field.fieldName) || hasFileCorrectExtension(field.fieldName)}"
+                accept=".jpeg,.png,.pdf"
+                [id]="field.fieldName"
+                [required]="field.required"
+                (change)="setFileForUpload($event, field.fieldName)">
+              <div class="invalid-feedback">
+                <p *ngIf="isRequiredError(field.fieldName)">
+                  Поле обязательно для заполнения
+                </p>
+                <p *ngIf="true || isFileLarge(field.fieldName)">
+                  Файл не может превышать 5Mb
+                </p>
+                <p *ngIf="hasFileCorrectExtension(field.fieldName)">
+                  Файл может быть только формата 'jpeg','png' или 'pdf'
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 control-description">{{field.fieldNote}}</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="fieldType.CHECKBOX">
+          <label class="col-form-label col-md-2 text-md-right"></label>
+          <div class="col-md-5">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" [formControlName]="field.fieldName" [id]="field.fieldName" [required]="field.required">
+              <label class="custom-control-label" [for]="field.fieldName">
+                <span [class.required-label]="field.required">
+                  {{field.label}}
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-5 control-description">{{field.fieldNote}}</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="fieldType.RADIO">
+          <label class="col-form-label col-md-2 text-md-right" [class.required-label]="field.required">{{field.label}}</label>
+          <div class="col-md-5 d-flex">
+            <div class="custom-control custom-radio" [ngClass]="{'ml-5': i>0}" *ngFor="let checkboxControl of field.valueList; index as i">
+              <input class="custom-control-input"
+                type="radio"
+                [attr.name]="field.fieldName"
+                [value]="checkboxControl.value"
+                [formControlName]="field.fieldName"
+                [id]="checkboxControl.value"
+                [required]="field.required">
+              <label class="custom-control-label" [for]="checkboxControl.value">
+                <span>
+                  {{checkboxControl.name}}
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-5 control-description">{{field.fieldNote}}</div>
+        </ng-container>
+        <ng-container *ngSwitchCase="fieldType.SELECT">
+          <label class="col-form-label align-self-center col-md-2 text-md-right" [for]="field.fieldName" [class.required-label]="field.required">{{field.label}}</label>
+          <div class="col-md-5">
+            <ng-select class="custom" [clearable]="false" [labelForId]="field.fieldName" [searchable]="false" [formControlName]="field.fieldName" [required]="field.required">
+              <ng-option *ngFor="let listItem of field.valueList" [value]="listItem.value">{{listItem.name}}</ng-option>
+          </ng-select>
+          </div>
+          <div class="col-md-5 control-description">{{field.fieldNote}}</div>
+        </ng-container>
+      </div>
+      <!-- agreement -->
+      <div class="mb-3 mt-4 row justify-content-center align-items-start">
+        <label class="col-form-label col-md-2 text-md-right"></label>
+        <div class="col-md-5">
+          <div class="custom-control custom-checkbox d-flex justify-content-start agreement-control">
+            <input class="custom-control-input" type="checkbox" formControlName="agreement" id="agreement" required>
+            <label class="custom-control-label" style="padding-left: 10px;" for="agreement">
+              Согласие на обработку персональных данных
+              <span class="required-label"></span>
+            </label>
+            <i class="material-icons ml-2" style="cursor: pointer" placement="auto" [outsideClick]="true" popover="В соответствии с требованиями Федерального закона от 27.07.06 № 152-ФЗ «О персональных данных» даю согласие на сбор, систематизацию, обработку, обновление и хранение предоставленных персональных данных для целей организации и проведения спортивных соревнований, а именно на подготовку стартовых, промежуточных и финишных протоколов с возможностью их демонстрации в сети Интернет.">
+              help_outline</i>
+          </div>
         </div>
+        <div class="col-md-5 control-description"></div>
       </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="fieldType.CHECKBOX">
-      <label class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
-      <div class="col-sm-8">
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" [formControlName]="field.fieldName" [id]="field.fieldName" [required]="field.required">
-          <label class="custom-control-label" [for]="field.fieldName">
-            {{field.label}}
-          </label>
+      <alert *ngIf="errorFromServer" type="danger">
+        <strong>Error!</strong> {{errorFromServer}}
+      </alert>
+      <div class=" mt-5 row justify-content-center align-items-start">
+        <div class="col-md-2"></div>
+        <div class="col-md-5 d-flex justify-content-end">
+          <button type="submit" [disabled]="submitDisabled" style="width: 230px; height: 50px;" class="btn btn-primary">
+            Зарегистрироваться
+          </button>
         </div>
+        <div class="col-md-5"></div>
       </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="fieldType.RADIO">
-      <label class="col-form-label col-sm-4 text-sm-right" [class.required-label]="field.required">{{field.label}}</label>
-      <div class="col-sm-8 d-flex">
-        <div class="custom-control custom-radio" [ngClass]="{'ml-2': i>0}" *ngFor="let checkboxControl of field.valueList; index as i">
-          <input class="custom-control-input"
-            type="radio"
-            [attr.name]="field.fieldName"
-            [value]="checkboxControl"
-            [formControlName]="field.fieldName"
-            [id]="checkboxControl"
-            [required]="field.required">
-          <label class="custom-control-label" [for]="checkboxControl">
-            {{checkboxControl}}
-          </label>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngSwitchCase="fieldType.SELECT">
-      <label class="col-form-label col-sm-4 text-sm-right" [for]="field.fieldName" [class.required-label]="field.required">{{field.label}}</label>
-      <div class="col-sm-8">
-        <select class="custom-select border border-3" [id]="field.fieldName" [formControlName]="field.fieldName" [required]="field.required">
-          <option *ngFor="let value of field.valueList" [value]="value">{{value}}</option>
-        </select>
-      </div>
-    </ng-container>
-  </div>
-  <button type="submit" class="btn btn-primary align-self-end mt-3">
-    Зарегистрироваться
-  </button>
-</form>
+    </form>
+  </ng-container>
 </section>
+<ng-template #registrationIsFinished>
+  <div class="d-flex flex-column align-items-center">
+    <p class="font-weight-bold text-center">Предварительная онлайн-регистрация для участия в {{eventTitle}} завершена.</p>
+    <p class="text-center">О наличии дополнительных стартовых слотов Вы можете уточнить напрямую у организаторов мероприятия.</p>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <div class="d-flex justify-content-center" style="margin-top: 35%">
+    <div class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>

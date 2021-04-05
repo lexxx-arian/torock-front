@@ -3,5 +3,7 @@ export enum FieldType {
   'INPUT' = 'TEXT',
   'DATE' = 'DATE',
   'SELECT' = 'LIST',
-  'RADIO' = 'RADIO'
+  'RADIO' = 'RADIO',
+  'NUM' = 'NUM',
+  'FILE' = 'FILE'
 }

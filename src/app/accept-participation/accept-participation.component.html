@@ -1,0 +1,14 @@
+<section class="d-flex flex-wrap justify-content-center" style="padding-top: 60px;" *ngIf="registrationResult | async as res">
+  <ng-container *ngIf="res.success; else error">
+    <p class="flex-grow-1 text-center">Вы успешно зарегистрированы для участия в</p>
+    <p class="flex-grow-1 text-center w-100 font-weight-bold" style="color: var(--primary);">
+      {{res.Quest.event_name}}
+    </p>
+  </ng-container>
+  <ng-template #error>
+    <p class="flex-grow-1 text-center w-100">
+      Регистрация не выполнена: <strong>{{res.Msg}}</strong>
+    </p>
+  </ng-template>
+</section>
+
