@@ -1,19 +1,19 @@
 {
 
   "/handle.php": {
-    "target": "http://dev.torock.pro/handle.php",
+    "target": "https://dev.torock.pro/handle.php",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/reg-data.php": {
-    "target": "http://dev.torock.pro/reg-data.php",
+    "target": "https://dev.torock.pro/reg-data.php",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/reg.php": {
-    "target": "http://dev.torock.pro/reg.php",
+    "target": "https://dev.torock.pro/reg.php",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

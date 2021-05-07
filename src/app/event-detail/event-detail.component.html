@@ -1,0 +1,12 @@
+<section>
+  <h1>Подробности мероприятия</h1>
+  <div class="container" *ngIf="eventDetails">
+    <p>Дисциплина: {{eventDetails.disciplines}}</p>
+    <p>Начало регистрации на мероприятие: {{eventDetails.bdate}}</p>
+    <p>Окончание регистрации на мероприятие: {{eventDetails.edate}}</p>
+    <p *ngIf="eventDetails.location">Место проведения: {{eventDetails.location}}</p>
+    <p *ngIf="eventDetails.referee">Судья: {{eventDetails.referee}}</p>
+    <p *ngIf="eventDetails.contacts">Контакты: {{eventDetails.contacts}}</p>
+    <a class="btn btn-primary" [routerLink]="['/registration']" [queryParams]="{event: eventDetails.id}">Зарегистрироваться на мероприятие</a>
+  </div>
+</section>

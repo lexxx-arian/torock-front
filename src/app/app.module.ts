@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -16,6 +16,7 @@ import { AcceptMailComponent } from './accept-mail/accept-mail.component';
 import { AcceptParticipationComponent } from './accept-participation/accept-participation.component';
 import { ModalSuccessRegistrationComponent } from './registration/modal.component';
 import { StartPageComponent } from './start-page/start-page.component';
+import { EventDetailComponent } from './event-detail/event-detail.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { StartPageComponent } from './start-page/start-page.component';
     AcceptMailComponent,
     AcceptParticipationComponent,
     ModalSuccessRegistrationComponent,
-    StartPageComponent
+    StartPageComponent,
+    EventDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { StartPageComponent } from './start-page/start-page.component';
     ButtonsModule.forRoot(),
     ModalModule.forRoot(),
     PopoverModule.forRoot(),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

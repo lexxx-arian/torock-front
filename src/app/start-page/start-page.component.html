@@ -1,19 +1,33 @@
 <section class="container">
-  <h1>Календарь соревнований</h1>
-  <ng-container *ngIf="eventList$ | async as eventList">
-    <div class="d-flex flex-wrap justify-content-around">
-      <div class="card border-primary mb-5" style="width: 30rem;" *ngFor="let event of eventList">
+  <h1 class="p-2">Календарь соревнований</h1>
+  <div class="continer row mb-3">
+    <div class="custom-control custom-switch col-md-5">
+      <input type="checkbox" class="custom-control-input" id="availableCompetition" name="availableCompetition" [formControl]="availableCompetition">
+      <label class="custom-control-label" for="availableCompetition">Показать активные мероприятия</label>
+    </div>
+    <div class="custom-control col-md-7">
+      <!-- <label for="competitionSearch" class="col-form-label">Поиск по контексту</label> -->
+      <input type="search" class="form-control border border-3" name="competitionSearch" id="competitionSearch" placeholder="поиск по контексту" [formControl]="competitionSearch">
+    </div>
+  </div>
+  <ng-container *ngIf="eventList$ | async as eventList;else noEvent">
+    <div class="d-flex flex-wrap justify-content-around" >
+      <div class="card border-primary mb-5" style="width: 30rem;" *ngFor="let event of eventList" (click)="gotoEventPage($event, event.id)">
         <div class="card-header">{{event.disciplines}}</div>
         <div class="card-body text-primary backgroud-card" [ngClass]="getBackgroundClass(event.disciplines)" style="min-height: 20rem;">
           <h5 class="card-title">{{event.event_name}}</h5>
           <p class="card-text">Место проведения: {{event.location}}</p>
+          <!-- <p class="card-text">Статус: {{event.state}}</p>
+          <p class="card-text">Признак удаления: {{event.is_deleted}}</p>
+          <p class="card-text">Признак публичности: {{event.is_public}}</p> -->
         </div>
         <div class="button-container flex-column align-items-center justify-content-around">
-          <a class="btn btn-outline-info w-50 border-3" [routerLink]="['/registration']" [queryParams]="{event: event.id}">Зарегистрироваться</a>
+          <a class="btn btn-outline-info w-50 border-3" [routerLink]="['/registration']" [queryParams]="{event: event.id}">Принять участие</a>
           <a class="btn btn-outline-info w-50 border-3" disabled>Результаты</a>
         </div>
         <div class="backdrop"></div>
       </div>
     </div>
   </ng-container>
+  <ng-template #noEvent>Мероприятия не найдены</ng-template>
 </section>

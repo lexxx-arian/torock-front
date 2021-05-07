@@ -131,13 +131,13 @@ form.was-validated {
 $font-family-base: "Montserrat", $font-family-sans-serif !default;
 
 html {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 300;
   line-height: 1.5;
   color: #49535A;
 
   @media screen and (max-width: 768px) {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .row {
